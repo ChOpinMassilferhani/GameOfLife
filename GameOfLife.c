@@ -108,24 +108,38 @@ void update(struct Tray *cur)
     free(mat);
 }
 
+void set_mat(int *mat)
+{
+    FILE *file = fopen("./set.txt","r");
+    char *line = malloc(20 * sizeof(char));
+    for(int i = 0; i < 10; i++)
+    {
+        size_t n;
+        getline(&line,&n,file);
+        for(int j = 0; j < 10; j++)
+            mat[i + j*10] = (line[j] == '1');
+    }
+}
+
+int over(struct Tray *cur)
+{
+    for (int i = 0; i < cur->size; i++)
+        if(cur->mat[i] == 1)
+            return 0;
+    return 1;
+}
+
+
+
 int main()
 {
     struct Tray *cur = init_Tray(10, 10, 100);
 
     SDL_Surface *screen_surface = display_image(cur->image);
-    int ini = 30+5;
-    cur->mat[ini] = 1;
-    cur->mat[ini+1] = 1;
-    cur->mat[ini+2] = 1;
-    ini += 9;
-    cur->mat[ini] = 1;
-    cur->mat[ini+1] = 1;
-    cur->mat[ini+2] = 1;
-    cur->mat[ini+3] = 1;
+    set_mat(cur->mat);
     int  i = 10;
-    while (i--)
+    while (i-- && !over(cur))
     {
-        update(cur);
 
         draw(cur);
         for (int i = 0; i < 10; i++)
@@ -135,7 +149,7 @@ int main()
         }
         update_surface(screen_surface, cur->image);
         usleep(500000);
-        printf("update\n");
+        update(cur);
     }
     free(cur->mat);
     SDL_FreeSurface(cur->image);

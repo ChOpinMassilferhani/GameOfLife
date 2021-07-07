@@ -1,7 +1,7 @@
 CC ?= gcc
 
 CPPFLAGS= `pkg-config --cflags sdl` -MMD
-CFLAGS= -Wall -Wextra  -std=c99 -O3
+CFLAGS= -Wall -Wextra  -std=c99 -g
 LDFLAGS=
 LDLIBS= `pkg-config --libs sdl` -lSDL_image -lSDL -lm
 
@@ -15,6 +15,8 @@ GameOfLife: ${OBJS}
 
 clean:
 	${RM} *.o
+	${RM} Tools/*.o
+	${RM} Tools/*.d
 	${RM} *.d
 	${RM} GameOfLife
 
